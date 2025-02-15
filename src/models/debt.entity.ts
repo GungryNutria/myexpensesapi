@@ -1,5 +1,6 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./user.entity";
+import { DebtMonth } from "./debtmonth.entity";
 
 @Entity()
 export class Debt {
@@ -16,8 +17,9 @@ export class Debt {
     @Column({ type: 'date' })
     date: Date;
 
-    @Column()
-    debtMonts: number;
     @ManyToOne(() => User, user => user.debts)
     user: User;
+
+    @OneToMany(() => DebtMonth, debtMonth => debtMonth.debt)
+    debtsMonth: DebtMonth[];
 }
