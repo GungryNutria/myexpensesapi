@@ -16,6 +16,8 @@ export class Debt {
     @Column({ type: 'date' })
     date: Date;
 
+    @Column()
+    debtMonts: number;
     @ManyToOne(() => User, user => user.debts)
     user: User;
 }
