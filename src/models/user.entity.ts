@@ -1,6 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Expense } from "./expense.entity";
-import { Debt } from "./debt.entity";
+import { Card } from "./card.entity";
 
 @Entity()
 export class User {
@@ -16,12 +15,7 @@ export class User {
     email: string;
     @Column()
     password: string;
-    @Column()
-    salary: number;
-    @Column({ type: 'date' })
-    dateOfBirth: Date;
-    @OneToMany(() => Expense, expense => expense.user)
-    expenses: Expense[];
-    @OneToMany(() => Debt, debt => debt.user)
-    debts: Debt[];
+
+    @OneToMany(() => Card, (card) => card.user)
+    cards: Card[];
 }
