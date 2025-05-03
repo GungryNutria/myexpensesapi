@@ -1,10 +1,11 @@
-import { Body, Controller, Delete, Get, Injectable, Param, Post, Put, UseGuards } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Delete, Get, Injectable, Param, Post, Put, UseGuards } from "@nestjs/common";
 import { UserService } from '../services/user.service';
 import { UserDto } from "src/dtos/user.dto";
 import { User } from "src/models/user.entity";
 import { JwtAuthGuard } from "src/auth/jwt.auth.guard";
+import { LoginDto } from "src/dtos/login.dto";
 
-@Controller('users')
+@Controller('user')
 export class UsersController {
 
     constructor(private readonly UserService: UserService) { }
@@ -14,24 +15,8 @@ export class UsersController {
         return this.UserService.create(createUserDto);
     }
 
-    @Get()
-    @UseGuards(JwtAuthGuard)
-    findAll(): Promise<User[]> {
-        return this.UserService.findAll();
-    }
-
-    @Get(':id')
-    findOne(@Param('id') id: number): Promise<User> {
-        return this.UserService.findOne(id);
-    }
-
-    @Put(':id')
-    update(@Param('id') id: number, @Body() updateUserDto: UserDto): Promise<User> {
-        return this.UserService.update(id, updateUserDto);
-    }
-
-    @Delete(':id')
-    remove(@Param('id') id: number): Promise<void> {
-        return this.UserService.remove(id);
+    @Post('login')
+    login(@Body() LoginDto: LoginDto): Promise<UserDto> {
+        return this.UserService.login(LoginDto);
     }
 }

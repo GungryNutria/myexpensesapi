@@ -1,36 +1,34 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { plainToInstance } from "class-transformer";
+import { LoginDto } from "src/dtos/login.dto";
 import { UserDto } from "src/dtos/user.dto";
 import { User } from "src/models/user.entity";
 import { Repository } from "typeorm";
+import * as bcrypt from 'bcryptjs'; // o bcrypt
 
 @Injectable()
 export class UserService {
     constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {}
 
     async create(createUserDto: UserDto): Promise<User> {
-        const user = this.userRepository.create(createUserDto);
+        var newUser = plainToInstance(User, createUserDto);
+        const user = this.userRepository.create(newUser);
         return await this.userRepository.save(user);
       }
-    
-      async findAll(): Promise<User[]> {
-        return await this.userRepository.find();
-      }
-    
-      async findOne(id: number): Promise<User> {
-        const user = await this.userRepository.findOne({ where: { id } });
-        if (!user) {
-            throw new Error(`User with id ${id} not found`);
+
+      async login(userDto: LoginDto): Promise<UserDto> {
+        const existUser = await this.userRepository.findOne({ where: { email: userDto.usernameOrEmail } });
+        if (!existUser) {
+            throw new UnauthorizedException(`User with username or email ${userDto.usernameOrEmail} not found`);
         }
-        return user;
-      }
-    
-      async update(id: number, updateUserDto: UserDto): Promise<User> {
-        const user = await this.userRepository.update(id, updateUserDto);
-        return this.findOne(id);
-      }
-    
-      async remove(id: number): Promise<void> {
-        await this.userRepository.delete(id);
+
+        const isPasswordValid = await bcrypt.compare(userDto.password, existUser.password);
+        if (!isPasswordValid) {
+            throw new UnauthorizedException(`Invalid password`);
+        }
+        const { password: _, ...result } = existUser;
+        var newUser = plainToInstance(UserDto, result);
+        return newUser;
       }
 }

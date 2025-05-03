@@ -1,9 +1,15 @@
-export class UserDto{
-        firstName?: string;
-        lastName?: string;
+import { Expose } from "class-transformer";
+import { AccountDto } from "./account.dto";
+
+export class UserDto {
+        @Expose()
+        id?: number;
+        @Expose()
         username?: string;
+        @Expose()
         email?: string;
+        @Expose()
         password?: string;
-        salary?: number;
-        dateOfBirth?: Date;
+        @Expose()
+        accounts?: AccountDto[];
 }
