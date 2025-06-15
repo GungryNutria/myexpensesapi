@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
 import { typeOrmConfig } from './config/typeorm.config';
 import { User } from './models/user.entity';
 import { UsersController } from './controllers/users.controller';
@@ -21,6 +22,9 @@ import { CategoryService } from './services/category.service';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot(typeOrmConfig),
     TypeOrmModule.forFeature([User, Concept, Category, Account, TypeAccount]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
