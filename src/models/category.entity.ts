@@ -2,21 +2,17 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Concept } from "./concept.entity";
 import { Account } from "./acount.entity";
 
-
 @Entity()
-export class User {
+export class Category {
     @PrimaryGeneratedColumn()
     id: number;
+
+    @Column()
+    operation: number; // 1: income, 2: expense
+
+    @Column()
+    name: string;
     
-    @Column()
-    username: string;
-
-    @Column()
-    email: string;
-
-    @Column()
-    password: string;
-
-    @OneToMany(() => Account, (account) => account.user)
-    accounts: Account[];
+    @OneToMany(() => Concept, (concept) => concept.category)
+    concepts: Concept[];
 }
