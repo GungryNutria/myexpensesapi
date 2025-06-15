@@ -45,8 +45,12 @@ export class AccountService {
                 typeAccount,
                 user
             });
-            const savedAccount = await this.accountRepository.save(account);
-            return plainToInstance(AccountDto, savedAccount, { excludeExtraneousValues: true });
+            const savedAccount = (await this.accountRepository.save(account)).id;
+            var accountWithRelations = await this.accountRepository.findOne({
+                where: { id: savedAccount },
+                relations: ['typeAccount']
+            });
+            return plainToInstance(AccountDto, accountWithRelations);
         } catch (error) {
             throw new InternalServerErrorException(`Error creating account: ${error.message}`);
         }

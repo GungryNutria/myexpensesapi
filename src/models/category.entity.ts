@@ -8,6 +8,9 @@ export class Category {
     id: number;
 
     @Column()
+    operation: number; // 1: income, 2: expense
+
+    @Column()
     name: string;
     
     @OneToMany(() => Concept, (concept) => concept.category)

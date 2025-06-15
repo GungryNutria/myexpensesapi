@@ -11,14 +11,11 @@ export class Concept{
     @Column()
     description: string;
 
-    @Column()
-    type: string;
-
     @Column({type: 'float'})
     mount: number;
-    
-    @Column()
-    operation: string; // 'income' | 'expense'
+
+    @Column({type: 'date'})
+    registrationDate: Date;
 
     @ManyToOne(() => Category, (category) => category.concepts)
     category: Category;
